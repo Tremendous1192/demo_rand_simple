@@ -1,7 +1,7 @@
 use plotters::prelude::*;
 
-const FILE_NAME: &str = "examples/inverse_gaussian.png";
-const CAPTION: &str = "Inverse gaussian distribution";
+const FILE_NAME: &str = "examples/triangular.png";
+const CAPTION: &str = "Triangular distribution";
 
 const QUANTITY: usize = 10_000_usize;
 
@@ -16,8 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .y_label_area_size(40)
         .caption(CAPTION, ("sans-serif", 50.0))
         .build_cartesian_2d(
-            (-5_f64..20_f64).step(0.1_f64).use_round().into_segmented(),
-            0u32..1_000u32,
+            (-1_f64..2_f64).step(0.1_f64).use_round().into_segmented(),
+            0u32..1_500u32,
         )?;
     // 軸の設定
     chart
@@ -32,7 +32,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::Gamma::new([1192u32, 765u32, 1543u32]);
+    let mut generator = rand_simple::Triangular::new(1192_u32);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);
@@ -45,7 +45,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .draw_series(
             Histogram::vertical(&chart)
                 .style(RED.mix(0.3).filled())
-                .margin(0)
+                .margin(1)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
         .unwrap()
@@ -53,9 +53,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED.mix(0.3)));
 
     // パラメータ変更
-    let mean: f64 = 1.5f64;
-    let shape: f64 = 2f64;
-    let _: Result<(f64, f64), &str> = generator.try_set_params(mean, shape);
+    let min: f64 = -1_f64;
+    let max: f64 = 1_f64;
+    let mode: f64 = 0.25_f64;
+    let _: Result<(f64, f64, f64), &str> = generator.try_set_params(min, max, mode);
     println!("Parameter change\n{}", generator);
     let mut vec = Vec::<f64>::new();
     for _ in 0..QUANTITY {
@@ -66,7 +67,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .draw_series(
             Histogram::vertical(&chart)
                 .style(BLUE.mix(0.3).filled())
-                .margin(0)
+                .margin(1)
                 .data(data.iter().map(|x: &f64| (*x, 1))),
         )
         .unwrap()

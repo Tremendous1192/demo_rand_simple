@@ -32,7 +32,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     // 乱数生成器
-    let mut generator = rand_simple::TDistribution::new([1192u32, 765u32, 1543u32, 2003u32, 1867u32]);
+    let mut generator =
+        rand_simple::TDistribution::new([1192u32, 765u32, 1543u32, 2003u32, 1867u32]);
 
     // 標準分布
     println!("Initial state\n{}\n", generator);

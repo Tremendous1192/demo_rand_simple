@@ -1,11 +1,11 @@
 [package]
 name = "demo_rand_simple"
-version = "0.1.0"
+version = "0.2.8"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand_simple = "0.2"
+rand_simple = "0.2.8"
 plotters = "0.3.5" # グラフ https://plotters-rs.github.io/book/intro/introduction.html
