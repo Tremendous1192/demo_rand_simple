@@ -167,7 +167,7 @@ dependencies = [
 
 [[package]]
 name = "demo_rand_simple"
-version = "0.2.8"
+version = "0.2.9"
 dependencies = [
  "plotters",
  "rand_simple",
@@ -563,9 +563,9 @@ dependencies = [
 
 [[package]]
 name = "rand_simple"
-version = "0.2.8"
+version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0aa672298566e5e404391a2f3f387b42be9687c07b99b69ee97b84502519130c"
+checksum = "aabfd84fb7356c589d1f3a84d2b87ea805b3447e00529a86fe3b76caacc78d12"
 
 [[package]]
 name = "redox_syscall"
