@@ -54,8 +54,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // パラメータ変更
     let mean: f64 = -3_f64;
-    let variance: f64 = 2_f64;
-    let _: Result<(f64, f64), &str> = generator.try_set_params(mean, variance);
+    let std: f64 = 2_f64.sqrt();
+    let _: Result<(f64, f64), &str> = generator.try_set_params(mean, std);
     println!("Parameter change\n{}", generator);
     let mut vec = Vec::<f64>::new();
     for _ in 0..QUANTITY {

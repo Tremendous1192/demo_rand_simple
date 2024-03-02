@@ -1,11 +1,42 @@
-use plotters::prelude::*;
+//use plotters::prelude::*;
+mod common_functions;
 
-const FILE_NAME: &str = "examples/bernoulli.png";
-const CAPTION: &str = "Bernoulli distribution";
+//const FILE_NAME: &str = "examples/bernoulli.png";
+//const CAPTION: &str = "Bernoulli distribution";
 
-const QUANTITY: usize = 10_000_usize;
+//const QUANTITY: usize = 10_000_usize;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 乱数生成器
+    let mut generator = rand_simple::Bernoulli::new(1192_u32);
+
+    // 標準分布
+    let mut standard_samples = Vec::<f64>::new();
+    for _ in 0..10000 {
+        standard_samples.push(generator.sample() as f64);
+    }
+
+    // パラメータを変更した分布
+    let probability: f64 = 0.8f64;
+    let _: Result<f64, &str> = generator.try_set_params(probability);
+    let mut custom_samples = Vec::<f64>::new();
+    for _ in 0..10000 {
+        custom_samples.push(generator.sample() as f64);
+    }
+
+    // 乱数列ヒストグラムの描画
+    let _ = common_functions::draw_histgram(
+        "examples/bernoulli.png",
+        "Bernoulli distribution",
+        &standard_samples,
+        &custom_samples,
+        -1_f64..3_f64,
+        1f64,
+        0..10_000,
+    );
+
+    Ok(())
+    /*
     // キャンバスの生成
     let root = BitMapBackend::new(FILE_NAME, (640, 480)).into_drawing_area();
     root.fill(&WHITE).unwrap();
@@ -81,4 +112,5 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     Ok(())
+    */
 }
