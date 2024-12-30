@@ -597,9 +597,8 @@ dependencies = [
 
 [[package]]
 name = "rand_simple"
-version = "0.2.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aabfd84fb7356c589d1f3a84d2b87ea805b3447e00529a86fe3b76caacc78d12"
+version = "0.2.39"
+source = "git+https://github.com/Tremendous1192/rand_simple/?branch=master#f909770838f9eca72853228016a57d6c6f0bef0f"
 
 [[package]]
 name = "redox_syscall"
