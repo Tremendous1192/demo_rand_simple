@@ -1,7 +1,6 @@
 use csv::Writer;
 
 // 乱数を生成してCSVファイルに保存する
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // ---- 初期化する ----
     // 乱数生成器
