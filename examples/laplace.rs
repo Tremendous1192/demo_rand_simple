@@ -1,85 +1,42 @@
-use plotters::prelude::*;
+use csv::Writer;
 
-const FILE_NAME: &str = "examples/laplace.png";
-const CAPTION: &str = "Laplace distribution";
-
-const QUANTITY: usize = 10_000_usize;
-
+// 乱数を生成してCSVファイルに保存する
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // キャンバスの生成
-    let root = BitMapBackend::new(FILE_NAME, (640, 480)).into_drawing_area();
-    root.fill(&WHITE).unwrap();
-
-    // キャンバスの設定
-    let mut chart = ChartBuilder::on(&root)
-        .x_label_area_size(35)
-        .y_label_area_size(40)
-        .caption(CAPTION, ("sans-serif", 50.0))
-        .build_cartesian_2d(
-            (-10_f64..10_f64).step(0.1_f64).use_round().into_segmented(),
-            0u32..600u32,
-        )?;
-    // 軸の設定
-    chart
-        .configure_mesh()
-        .disable_x_mesh()
-        .disable_y_mesh()
-        .bold_line_style(&WHITE.mix(0.3))
-        .y_desc("Count")
-        .x_desc("Random variable x")
-        .axis_desc_style(("sans-serif", 15))
-        .draw()
-        .unwrap();
-
+    // ---- 初期化する ----
     // 乱数生成器
     let mut generator = rand_simple::Laplace::new(1192_u32);
 
-    // 標準分布
-    println!("Initial state\n{}\n", generator);
-    let mut vec = Vec::<f64>::new();
-    for _ in 0..QUANTITY {
-        vec.push(generator.sample());
-    }
-    let data: [f64; QUANTITY] = vec.try_into().unwrap();
-    chart
-        .draw_series(
-            Histogram::vertical(&chart)
-                .style(RED.mix(0.3).filled())
-                .margin(0)
-                .data(data.iter().map(|x: &f64| (*x, 1))),
-        )
-        .unwrap()
-        .label("Standard distribution")
-        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED.mix(0.3)));
+    // CSVファイルのパス
+    let file_path = "C:/MyPrograms/demo_rand_simple/data/Laplace.csv";
 
-    // パラメータ変更
+
+    // ---- 乱数を生成する ----
+    // 標準分布
+    let mut standard_samples = Vec::<f64>::new();
+    for _ in 0..1000 {
+        standard_samples.push(generator.sample() as f64);
+    }
+
+    // パラメータを変更した分布
     let location: f64 = -2_f64;
     let scale: f64 = 1.5_f64;
     let _: Result<(f64, f64), &str> = generator.try_set_params(location, scale);
-    println!("Parameter change\n{}", generator);
-    let mut vec = Vec::<f64>::new();
-    for _ in 0..QUANTITY {
-        vec.push(generator.sample());
+    let mut custom_samples = Vec::<f64>::new();
+    for _ in 0..1000 {
+        custom_samples.push(generator.sample() as f64);
     }
-    let data: [f64; QUANTITY] = vec.try_into().unwrap();
-    chart
-        .draw_series(
-            Histogram::vertical(&chart)
-                .style(BLUE.mix(0.3).filled())
-                .margin(0)
-                .data(data.iter().map(|x: &f64| (*x, 1))),
-        )
-        .unwrap()
-        .label("Parameter change")
-        .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &BLUE.mix(0.3)));
 
-    // 凡例の描画
-    chart
-        .configure_series_labels()
-        .border_style(&BLACK)
-        .background_style(&WHITE.mix(0.8))
-        .draw()
-        .unwrap();
+    // ---- 生成した乱数をCSVファイルに保存する ----
+    // CSVファイルWriterの初期化
+    let mut wtr = Writer::from_path(file_path)?;
+    // 列名の保存
+    wtr.write_record(["Standard distribution", "Custom parameter distribution"])?;
+    // 生成した乱数を保存する
+    for (sd, cpd) in standard_samples.iter().zip(custom_samples.iter()) {
+        wtr.write_record([sd, cpd].into_iter().map(|e| e.to_string()).clone())?;
+    }
+    // 書き込み完了時に行う
+    wtr.flush()?;
 
     Ok(())
 }
